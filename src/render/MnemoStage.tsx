@@ -1,18 +1,22 @@
 import { Layer } from 'react-konva';
 import { useEffect, useState } from 'react';
+
 import { sceneStore } from '../model/SceneStore';
 import { screenStore } from '../model/ScreenStore';
+
 import { SymbolRegistry } from './SymbolRegistry';
 import ConnectionsLayer from './ConnectionsLayer';
 import StageWithChildren from './StageWithChildren';
 
-export default function MnemoStage() {
+import { observer } from 'mobx-react-lite';
+
+export default observer(function MnemoStage() {
   const [, forceUpdate] = useState(0);
 
   useEffect(() => {
-    const u1 = sceneStore.subscribe(() => forceUpdate(x => x + 1));
-    const u2 = screenStore.subscribe(() => forceUpdate(x => x + 1));
-    return () => { u1(); u2(); };
+    const unsub1 = sceneStore.subscribe(() => forceUpdate(x => x + 1));
+    const unsub2 = screenStore.subscribe(() => forceUpdate(x => x + 1));
+    return () => { unsub1(); unsub2(); };
   }, []);
 
   const screen = screenStore.getCurrentScreen();
@@ -26,7 +30,9 @@ export default function MnemoStage() {
     height={600}
     draggable
   >
+     {/* Слой соединений */}
     <ConnectionsLayer />
+    {/* Слой символов */}
     <Layer>
       {symbols.map(s => {
         const Comp = SymbolRegistry[s.type];
@@ -35,4 +41,4 @@ export default function MnemoStage() {
     </Layer>
   </StageWithChildren>
 );
-}
+});

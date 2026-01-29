@@ -3,6 +3,8 @@
 import { Group, Circle, Text } from 'react-konva';
 import { MimicSymbol } from '../../model/types';
 import { screenStore } from '../../model/ScreenStore';
+import { navigationStore } from '../../stores/NavigationStore';
+import { BaseSymbol } from './BaseSymbol';
 
 export default function Pump({ symbol }: { symbol: MimicSymbol }) {
   const fill =
@@ -10,21 +12,19 @@ export default function Pump({ symbol }: { symbol: MimicSymbol }) {
     symbol.state === 'warning' ? 'orange' : 'green';
 
   return (
-    <Group
-      x={symbol.x}
-      y={symbol.y}
-      onDblClick={() => {
-        if (symbol.targetScreenId) {
-          screenStore.openScreen(symbol.targetScreenId);
-        }
-      }}
-    >
-      <Circle radius={30} fill={fill} stroke="black" />
+    <BaseSymbol symbol={symbol}>
+      <Circle 
+      radius={30} 
+      fill={fill} 
+      stroke="black" 
+      listening={true}
+      />
+
       <Text
         text={`Насос\n${symbol.value ?? ''}`}
         y={40}
         align="center"
       />
-    </Group>
+    </BaseSymbol>
   );
 }

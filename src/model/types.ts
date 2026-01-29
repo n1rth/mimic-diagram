@@ -10,6 +10,7 @@ export interface MimicSymbol {
   state: SymbolState;
   value?: number;
   targetScreenId?: string; // для навигации
+  title: string;
 }
 
 export interface MnemoScreen {

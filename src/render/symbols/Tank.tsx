@@ -2,6 +2,8 @@ import { Group, Rect, Text } from 'react-konva';
 import { MimicSymbol } from '../../model/types';
 import { screenStore } from '../../model/ScreenStore';
 import { renderLabel } from '../common/renderLabel';
+import { navigationStore } from '../../stores/NavigationStore';
+import { BaseSymbol } from './BaseSymbol';
 
 const WIDTH = 80;
 const HEIGHT = 120;
@@ -15,15 +17,7 @@ export default function Tank({ symbol }: { symbol: MimicSymbol }) {
     symbol.state === 'warning' ? 'orange' : 'black';
 
   return (
-    <Group
-      x={symbol.x}
-      y={symbol.y}
-      onDblClick={() => {
-        if (symbol.targetScreenId) {
-          screenStore.openScreen(symbol.targetScreenId);
-        }
-      }}
-    >
+    <BaseSymbol symbol={symbol}>
       {renderLabel(symbol.label, WIDTH, HEIGHT)}
 
       {/* Контур бака */}
@@ -33,6 +27,7 @@ export default function Tank({ symbol }: { symbol: MimicSymbol }) {
         stroke={stroke}
         strokeWidth={2}
         fill="lightblue"
+        listening={true}
       />
 
       {/* Уровень */}
@@ -52,6 +47,6 @@ export default function Tank({ symbol }: { symbol: MimicSymbol }) {
         fill="white"
         listening={false}
       />
-    </Group>
+      </BaseSymbol>
   );
 }
