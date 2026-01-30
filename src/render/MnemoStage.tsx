@@ -1,5 +1,6 @@
 import { Layer } from 'react-konva';
 import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 
 import { sceneStore } from '../model/SceneStore';
 import { screenStore } from '../model/ScreenStore';
@@ -7,8 +8,6 @@ import { screenStore } from '../model/ScreenStore';
 import { SymbolRegistry } from './SymbolRegistry';
 import ConnectionsLayer from './ConnectionsLayer';
 import StageWithChildren from './StageWithChildren';
-
-import { observer } from 'mobx-react-lite';
 
 export default observer(function MnemoStage() {
   const [, forceUpdate] = useState(0);
@@ -22,12 +21,26 @@ export default observer(function MnemoStage() {
   const screen = screenStore.getCurrentScreen();
   if (!screen) return null;
 
-  const symbols = sceneStore.getSymbols(screen.symbolIds);
+  const symbols = sceneStore.getSymbols();
+
+  const bounds = sceneStore.getBounds();
+
+const padding = 40;
+const viewportWidth = window.innerWidth - 200;
+const viewportHeight = 600;
+
+const scaleX = viewportWidth / (bounds.width + padding * 2);
+const scaleY = viewportHeight / (bounds.height + padding * 2);
+const scale = Math.min(scaleX, scaleY, 1);
 
   return (
   <StageWithChildren
-    width={window.innerWidth - 200}
-    height={600}
+    width={viewportWidth}
+    height={viewportHeight}
+    scaleX={scale}
+    scaleY={scale}
+    x={-bounds.x * scale + padding}
+    y={-bounds.y * scale + padding}
     draggable
   >
      {/* Слой соединений */}

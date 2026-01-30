@@ -10,6 +10,9 @@ import { createSymbol } from './model/factories';
 import { autorun } from 'mobx';
 import { navigationStore } from './stores/NavigationStore';
 import { Breadcrumb } from './ui/Breadcrumb';
+import { loadMainScreenMock } from './api/screens';
+
+import NavigationBar from './ui/NavigationBar';
 
 /*
 autorun(() => {
@@ -22,9 +25,9 @@ autorun(() => {
 export default function App() {
  useEffect(() => {
     // Инициализируем навигацию корневым экраном
-    navigationStore.openRoot('main', 'Главная');
+    //navigationStore.openRoot('main', 'Главная');
 
-    sceneStore.setSymbols([
+    /*sceneStore.setSymbols([
       createSymbol({
         id: 'pump_1',
         type: 'pump',
@@ -46,7 +49,12 @@ export default function App() {
         label: { text: 'Бак №1', position: 'top' },
         title: 'Бак №1'
       }),
-    ]);
+    ]);*/
+
+    loadMainScreenMock().then(screen => {
+    sceneStore.loadScreen(screen);
+    navigationStore.openRoot(screen.id, screen.title);
+  });
 
     screenStore.setScreens(
       [
@@ -61,11 +69,12 @@ export default function App() {
   
 
   return (
-    <div style={{ display: 'flex' }}>
-      {/* Breadcrumb UI */}
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <NavigationBar />
       <Breadcrumb />
-      {/* Основная сцена */}
-      <MnemoStage />
+      <div style={{ flex: 1 }}>
+        <MnemoStage />
+      </div>
     </div>
   );
 }

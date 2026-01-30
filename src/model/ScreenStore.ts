@@ -1,10 +1,15 @@
 import { MnemoScreen } from './types';
 
+type ScreenPathItem = {
+  id: string;
+  title: string;
+};
 type Listener = () => void;
 
 export class ScreenStore {
   private screens = new Map<string, MnemoScreen>();
   private currentScreenId: string | null = null;
+  private path: ScreenPathItem[] = [];
   private listeners = new Set<Listener>();
 
   setScreens(screens: MnemoScreen[], initialId: string) {
@@ -13,17 +18,28 @@ export class ScreenStore {
     this.emit();
   }
 
-  openScreen(id: string) {
-    if (this.screens.has(id)) {
-      this.currentScreenId = id;
-      this.emit();
+   openScreen(screenId: string, title: string) {
+    const existingIndex = this.path.findIndex(p => p.id === screenId);
+
+    if (existingIndex !== -1) {
+      // возврат назад по пути
+      this.path = this.path.slice(0, existingIndex + 1);
+    } else {
+      this.path.push({ id: screenId, title });
     }
+
+    this.currentScreenId = screenId;
+    this.emit();
   }
 
   getCurrentScreen() {
     return this.currentScreenId
       ? this.screens.get(this.currentScreenId)
       : null;
+  }
+
+  getPath() {
+    return this.path;
   }
 
   getAllScreens() {

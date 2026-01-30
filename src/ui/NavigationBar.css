@@ -1,0 +1,29 @@
+.nav-root {
+  display: flex;
+  flex-wrap: wrap;        /* 🔑 перенос на новую строку */
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+  border-bottom: 1px solid #333;
+
+  background: #1e1e1e;
+  color: #ddd;
+
+  font-size: 13px;
+  user-select: none;
+}
+
+.nav-item {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  color: #4fc3f7;
+}
+
+.nav-sep {
+  margin: 0 4px;
+  color: #777;
+}
